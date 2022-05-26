@@ -3,34 +3,41 @@ package pl.agh.edu.dp.labirynth;
 import pl.agh.edu.dp.labirynth.mazeParts.Direction;
 import pl.agh.edu.dp.labirynth.mazeParts.MapSite;
 import pl.agh.edu.dp.labirynth.mazeParts.normal.Room;
-
-import static java.lang.System.exit;
+import pl.agh.edu.dp.main.OutputManager;
 
 public class Player {
     private final Room finalRoom;
-    private Room room;
     private final Bombardier bombardier;
+    private boolean active = true;
+    private Room room;
 
     public Player(Room startingRoom, Room finalRoom) {
         this.room = startingRoom;
         this.finalRoom = finalRoom;
-        this.bombardier = new Bombardier(); // outsourcing checking for bombarding
+        this.bombardier = new Bombardier(this); // outsourcing checking for bombarding
+    }
+
+    public void deactivate() {
+        this.active = false;
     }
 
     public void goDirection(String move) {
-        Direction direction = interpretMove(move);
-        if (direction == null) {
-            return;
-        }
-        MapSite mapSite = this.room.getSide(direction);
-        Room newRoom = mapSite.Enter(this.room);
+        if (active) {
+            Direction direction = interpretMove(move);
+            if (direction == null) {
+                return;
+            }
+            MapSite mapSite = this.room.getSide(direction);
+            Room newRoom = mapSite.Enter(this.room);
 
-        this.bombardier.checkForBombarding(this.room,newRoom);
+            this.bombardier.checkForBombarding(this.room, newRoom);
 
-        this.room = newRoom;
-        if (this.room.equals(finalRoom)) {
-            System.out.println("YOU WON THE GAME!");
-            exit(0);
+            this.room = newRoom;
+            if (this.room.equals(finalRoom)) {
+                OutputManager.setConsoleMessage("Player deactivated");
+                OutputManager.setConsoleMessage("YOU WON THE GAME!");
+                deactivate();
+            }
         }
     }
 

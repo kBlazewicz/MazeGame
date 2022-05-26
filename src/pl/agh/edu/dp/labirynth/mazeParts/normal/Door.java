@@ -1,6 +1,7 @@
 package pl.agh.edu.dp.labirynth.mazeParts.normal;
 
 import pl.agh.edu.dp.labirynth.mazeParts.MapSite;
+import pl.agh.edu.dp.main.OutputManager;
 
 public class Door extends MapSite {
     private Room room1;
@@ -20,7 +21,8 @@ public class Door extends MapSite {
         } else {
             room = room1;
         }
-        System.out.println("You entered the room: " + room.getRoomNumber() + " from " + currentRoom.getRoomNumber());
+        OutputManager.setConsoleMessage("You entered the room: " + room.getRoomNumber() +
+                " from " + currentRoom.getRoomNumber());
         return room;
     }
 
